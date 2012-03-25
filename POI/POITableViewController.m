@@ -8,6 +8,7 @@
 
 #import "POITableViewController.h"
 #import "POI.h"
+#import "POIDetailViewController.h"
 
 @interface POITableViewController ()
 
@@ -18,21 +19,6 @@
 @implementation POITableViewController
 
 @synthesize poiList,sectionList;
-
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-//- (NSArray*)poiList {
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        poi
-//    });
-//}
 
 - (void)setPoiList:(NSArray *)array {
     UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
@@ -80,15 +66,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
     [self ingestPOIData];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    NSLog(@"%@",self.tableView.tableHeaderView);
+    
+    self.navigationItem.title = NSLocalizedString(@"Points of Interest", nil);
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] init];
+    self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"POIs", nil);
 }
 
 - (void)viewDidUnload {
@@ -139,7 +121,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-//    UILocalizedIndexedCollation *currentCollation = [UILocalizedIndexedCollation currentCollation];
     return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
 }
 
@@ -168,15 +149,15 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSArray *section = [self.sectionList objectAtIndex:indexPath.section];
+    POI *poi = [section objectAtIndex:indexPath.row];
+    
+    POIDetailViewController *detailVC = [[POIDetailViewController alloc] init];
+    detailVC.selectedPOI = poi;
+    
+    [self.navigationController pushViewController:detailVC animated:YES];
 }
 
 @end

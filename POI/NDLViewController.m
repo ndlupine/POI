@@ -20,6 +20,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         poiTableVC = [[POITableViewController alloc] initWithStyle:UITableViewStylePlain];
+        
     });
     
     return poiTableVC;

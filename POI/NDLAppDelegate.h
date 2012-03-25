@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class NDLViewController;
+#import "POITableViewController.h"
 
 @interface NDLAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) NDLViewController *viewController;
+@property (strong, nonatomic) POITableViewController *viewController;
 @property (strong, nonatomic) UINavigationController *navigationController;
 
 @end

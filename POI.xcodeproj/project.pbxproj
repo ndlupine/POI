@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01842E13151ED40B0001DBE5 /* POIDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01842E12151ED40B0001DBE5 /* POIDetailViewController.m */; };
 		01C6A5E2151D7BC50088E687 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E1151D7BC50088E687 /* UIKit.framework */; };
 		01C6A5E4151D7BC50088E687 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E3151D7BC50088E687 /* Foundation.framework */; };
 		01C6A5E6151D7BC50088E687 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E5151D7BC50088E687 /* CoreGraphics.framework */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01842E11151ED40B0001DBE5 /* POIDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIDetailViewController.h; sourceTree = "<group>"; };
+		01842E12151ED40B0001DBE5 /* POIDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIDetailViewController.m; sourceTree = "<group>"; };
 		01C6A5DD151D7BC50088E687 /* POI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = POI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01C6A5E1151D7BC50088E687 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01C6A5E3151D7BC50088E687 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -123,6 +126,8 @@
 				01C6A5F4151D7BC50088E687 /* NDLViewController.m */,
 				01C6A619151D7C8B0088E687 /* POITableViewController.h */,
 				01C6A61A151D7C8B0088E687 /* POITableViewController.m */,
+				01842E11151ED40B0001DBE5 /* POIDetailViewController.h */,
+				01842E12151ED40B0001DBE5 /* POIDetailViewController.m */,
 				01C6A677151EA06E0088E687 /* POI.h */,
 				01C6A678151EA06E0088E687 /* POI.m */,
 				01C6A5E8151D7BC50088E687 /* Supporting Files */,
@@ -274,6 +279,7 @@
 				01C6A5F5151D7BC50088E687 /* NDLViewController.m in Sources */,
 				01C6A61B151D7C8B0088E687 /* POITableViewController.m in Sources */,
 				01C6A679151EA06E0088E687 /* POI.m in Sources */,
+				01842E13151ED40B0001DBE5 /* POIDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +441,7 @@
 				01C6A612151D7BC50088E687 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		01C6A613151D7BC50088E687 /* Build configuration list for PBXNativeTarget "POITests" */ = {
 			isa = XCConfigurationList;
@@ -443,6 +450,7 @@
 				01C6A615151D7BC50088E687 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

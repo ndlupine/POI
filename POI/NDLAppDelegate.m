@@ -8,7 +8,6 @@
 
 #import "NDLAppDelegate.h"
 
-#import "NDLViewController.h"
 
 @implementation NDLAppDelegate
 
@@ -17,7 +16,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.viewController = [[NDLViewController alloc] init];
+    self.viewController = [[POITableViewController alloc] init];
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     

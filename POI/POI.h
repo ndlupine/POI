@@ -18,12 +18,15 @@ typedef enum {
 
 @property (nonatomic,strong) NSString *name;
 @property (nonatomic,strong) NSString *type;
+@property (nonatomic,strong) NSString *subtype;
+@property (nonatomic,strong) NSString *summary;
 @property (nonatomic,strong) NSDecimalNumber *longitude;
 @property (nonatomic,strong) NSDecimalNumber *latitude;
 @property (nonatomic,strong) NSString *address;
 @property (nonatomic,strong) NSString *phoneNumber;
 @property (nonatomic,strong) NSArray *URLs;
 @property (nonatomic,strong) NSNumber *price;
+@property (nonatomic,strong) NSDictionary *origData;
 
 - (id)initWithAttributes:(NSDictionary*)attributes;
 

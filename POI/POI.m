@@ -10,7 +10,7 @@
 
 @implementation POI
 
-@synthesize name,type,longitude,latitude,address,phoneNumber,URLs,price;
+@synthesize name,type,subtype,summary,longitude,latitude,address,phoneNumber,URLs,price,origData;
 
 - (id)initWithAttributes:(NSDictionary *)attributes {
     self = [super init];
@@ -18,15 +18,22 @@
     if (self) {
         self.name = [attributes valueForKey:@"name"];
         self.type = [attributes valueForKey:@"type"];
+        self.subtype = [attributes valueForKey:@"subtype"];
+        self.summary = [attributes valueForKeyPath:@"review.summary"];
         self.longitude = [attributes valueForKey:@"longitude"];
         self.latitude = [attributes valueForKey:@"latitude"];
-        self.address = [attributes valueForKey:@"address"];
-        self.phoneNumber = [attributes valueForKey:@"click_to_dial"];
+        self.address = [attributes valueForKeyPath:@"address.street"];
+        self.phoneNumber = [[attributes valueForKeyPath:@"telephones.click_to_dial"] lastObject];
         self.URLs = [attributes valueForKey:@"urls"];
-        self.price = [attributes valueForKey:@"price"];
+        self.price = [attributes valueForKey:@"price_range"];
+        self.origData = attributes;
     }
     
     return self;
+}
+
+- (NSString*)description {
+    return self.origData.description;
 }
 
 @end
