@@ -13,12 +13,20 @@
 @interface POITableViewController ()
 
 - (void)ingestPOIData;
+- (POI*)poiAtIndexPath:(NSIndexPath*)indexPath;
 
 @end
 
 @implementation POITableViewController
 
 @synthesize poiList,sectionList;
+
+#pragma mark - Data handling
+
+- (POI*)poiAtIndexPath:(NSIndexPath*)indexPath {
+    NSArray *section = [self.sectionList objectAtIndex:indexPath.section];
+    return [section objectAtIndex:indexPath.row];
+}
 
 - (void)setPoiList:(NSArray *)array {
     UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
@@ -63,6 +71,8 @@
     [self setPoiList:POIs];
 }
 
+#pragma mark - View lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -103,10 +113,10 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    NSDictionary *poi = [[[self sectionList] objectAtIndex:[indexPath section]] objectAtIndex:[indexPath row]];
+    POI *poi = [self poiAtIndexPath:indexPath];
     
-    [[cell textLabel] setText:[poi valueForKey:@"name"]];
-    [[cell detailTextLabel] setText:[poi valueForKey:@"type"]];
+    [[cell textLabel] setText:[poi name]];
+    [[cell detailTextLabel] setText:[poi subtype]];
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     
     return cell;
@@ -150,9 +160,7 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    NSArray *section = [self.sectionList objectAtIndex:indexPath.section];
-    POI *poi = [section objectAtIndex:indexPath.row];
+    POI *poi = [self poiAtIndexPath:indexPath];
     
     POIDetailViewController *detailVC = [[POIDetailViewController alloc] init];
     detailVC.selectedPOI = poi;
