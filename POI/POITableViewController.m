@@ -81,6 +81,8 @@
     self.navigationItem.title = NSLocalizedString(@"Points of Interest", nil);
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] init];
     self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"POIs", nil);
+    
+    self.view.frame = CGRectMake(20,40,280,350);
 }
 
 - (void)viewDidUnload {
@@ -117,7 +119,7 @@
     
     [[cell textLabel] setText:[poi name]];
     [[cell detailTextLabel] setText:[poi subtype]];
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+//    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     
     return cell;
 }

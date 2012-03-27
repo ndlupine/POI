@@ -10,7 +10,18 @@
 
 @implementation POI
 
-@synthesize name,type,subtype,summary,longitude,latitude,address,phoneNumber,URLs,price,origData;
+@synthesize name;
+@synthesize type;
+@synthesize subtype;
+@synthesize summary;
+@synthesize longitude;
+@synthesize latitude;
+@synthesize address;
+@synthesize phoneNumber;
+@synthesize URLs;
+@synthesize price;
+@synthesize hours;
+@synthesize origData;
 
 - (id)initWithAttributes:(NSDictionary *)attributes {
     self = [super init];

@@ -26,6 +26,7 @@ typedef enum {
 @property (nonatomic,strong) NSString *phoneNumber;
 @property (nonatomic,strong) NSArray *URLs;
 @property (nonatomic,strong) NSNumber *price;
+@property (nonatomic,strong) NSString *hours;
 @property (nonatomic,strong) NSDictionary *origData;
 
 - (id)initWithAttributes:(NSDictionary*)attributes;

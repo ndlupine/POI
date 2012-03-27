@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "POI.h"
 
-@interface POIDetailViewController : UIViewController
+@interface POIDetailViewController : UITableViewController
 
 @property (nonatomic,strong) POI *selectedPOI;
 

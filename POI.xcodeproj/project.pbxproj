@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		01842E13151ED40B0001DBE5 /* POIDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01842E12151ED40B0001DBE5 /* POIDetailViewController.m */; };
 		01842E16151F45DE0001DBE5 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01842E15151F45DE0001DBE5 /* View.xib */; };
+		01842E1B152053E10001DBE5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01842E1A152053E10001DBE5 /* QuartzCore.framework */; };
+		01842E1D152056D60001DBE5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01842E1C152056D60001DBE5 /* MapKit.framework */; };
+		01842E1F152058560001DBE5 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01842E1E152058560001DBE5 /* CoreLocation.framework */; };
+		01842E2515214CDA0001DBE5 /* POIPriceRangeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01842E2415214CDA0001DBE5 /* POIPriceRangeView.m */; };
+		01842E28152155930001DBE5 /* UIImage+POIType.m in Sources */ = {isa = PBXBuildFile; fileRef = 01842E27152155930001DBE5 /* UIImage+POIType.m */; };
 		01C6A5E2151D7BC50088E687 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E1151D7BC50088E687 /* UIKit.framework */; };
 		01C6A5E4151D7BC50088E687 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E3151D7BC50088E687 /* Foundation.framework */; };
 		01C6A5E6151D7BC50088E687 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E5151D7BC50088E687 /* CoreGraphics.framework */; };
@@ -40,6 +45,13 @@
 		01842E11151ED40B0001DBE5 /* POIDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIDetailViewController.h; sourceTree = "<group>"; };
 		01842E12151ED40B0001DBE5 /* POIDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIDetailViewController.m; sourceTree = "<group>"; };
 		01842E15151F45DE0001DBE5 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = View.xib; path = ../../../../Desktop/View.xib; sourceTree = "<group>"; };
+		01842E1A152053E10001DBE5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		01842E1C152056D60001DBE5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		01842E1E152058560001DBE5 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		01842E2315214CDA0001DBE5 /* POIPriceRangeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIPriceRangeView.h; sourceTree = "<group>"; };
+		01842E2415214CDA0001DBE5 /* POIPriceRangeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIPriceRangeView.m; sourceTree = "<group>"; };
+		01842E26152155930001DBE5 /* UIImage+POIType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+POIType.h"; sourceTree = "<group>"; };
+		01842E27152155930001DBE5 /* UIImage+POIType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+POIType.m"; sourceTree = "<group>"; };
 		01C6A5DD151D7BC50088E687 /* POI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = POI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01C6A5E1151D7BC50088E687 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01C6A5E3151D7BC50088E687 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -70,6 +82,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01842E1F152058560001DBE5 /* CoreLocation.framework in Frameworks */,
+				01842E1D152056D60001DBE5 /* MapKit.framework in Frameworks */,
+				01842E1B152053E10001DBE5 /* QuartzCore.framework in Frameworks */,
 				01C6A5E2151D7BC50088E687 /* UIKit.framework in Frameworks */,
 				01C6A5E4151D7BC50088E687 /* Foundation.framework in Frameworks */,
 				01C6A5E6151D7BC50088E687 /* CoreGraphics.framework in Frameworks */,
@@ -92,6 +107,9 @@
 		01C6A5D2151D7BC50088E687 = {
 			isa = PBXGroup;
 			children = (
+				01842E1E152058560001DBE5 /* CoreLocation.framework */,
+				01842E1C152056D60001DBE5 /* MapKit.framework */,
+				01842E1A152053E10001DBE5 /* QuartzCore.framework */,
 				01C6A5E7151D7BC50088E687 /* POI */,
 				01C6A605151D7BC50088E687 /* POITests */,
 				01C6A5E0151D7BC50088E687 /* Frameworks */,
@@ -130,6 +148,10 @@
 				01C6A61A151D7C8B0088E687 /* POITableViewController.m */,
 				01842E11151ED40B0001DBE5 /* POIDetailViewController.h */,
 				01842E12151ED40B0001DBE5 /* POIDetailViewController.m */,
+				01842E2315214CDA0001DBE5 /* POIPriceRangeView.h */,
+				01842E2415214CDA0001DBE5 /* POIPriceRangeView.m */,
+				01842E26152155930001DBE5 /* UIImage+POIType.h */,
+				01842E27152155930001DBE5 /* UIImage+POIType.m */,
 				01C6A677151EA06E0088E687 /* POI.h */,
 				01C6A678151EA06E0088E687 /* POI.m */,
 				01842E15151F45DE0001DBE5 /* View.xib */,
@@ -284,6 +306,8 @@
 				01C6A61B151D7C8B0088E687 /* POITableViewController.m in Sources */,
 				01C6A679151EA06E0088E687 /* POI.m in Sources */,
 				01842E13151ED40B0001DBE5 /* POIDetailViewController.m in Sources */,
+				01842E2515214CDA0001DBE5 /* POIPriceRangeView.m in Sources */,
+				01842E28152155930001DBE5 /* UIImage+POIType.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
