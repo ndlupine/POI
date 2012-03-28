@@ -19,6 +19,7 @@ typedef enum {
 @property (nonatomic,strong) NSString *name;
 @property (nonatomic,strong) NSString *type;
 @property (nonatomic,strong) NSString *subtype;
+@property (nonatomic,strong,readonly) NSString *fullType;
 @property (nonatomic,strong) NSString *summary;
 @property (nonatomic,strong) NSDecimalNumber *longitude;
 @property (nonatomic,strong) NSDecimalNumber *latitude;

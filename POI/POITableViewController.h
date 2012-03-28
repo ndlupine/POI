@@ -16,8 +16,5 @@
 @property (nonatomic,strong) UISearchBar *searchBar;
 @property (nonatomic,strong) UISearchDisplayController *searchCtrl;
 @property (nonatomic,strong) NSArray *searchResultList;
-//@property (nonatomic,strong) UIViewController *mapViewController;
-//@property (nonatomic,strong) MKMapView *mapView;
-
 
 @end

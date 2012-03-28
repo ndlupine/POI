@@ -7,14 +7,13 @@
 //
 
 #import "POIMapViewController.h"
+#import "POIDetailViewController.h"
 #import "POI.h"
 #import "POIMapPoint.h"
-#import <MapKit/MapKit.h>
 
 @interface POIMapViewController ()
 
 @property (nonatomic,strong) MKMapView *mapView;
-@property (nonatomic,strong) UIButton *listButton;
 @property (nonatomic,strong) NSArray *mapAnnotations;
 
 - (void)listButtonTapped:(id)sender;
@@ -26,12 +25,12 @@
 @synthesize pointsOfInterest;
 @synthesize mapAnnotations;
 @synthesize mapView;
-@synthesize listButton;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
     
     self.mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
+    self.mapView.delegate = self;
     [self.view addSubview:self.mapView];
     
     [self.mapView addAnnotations:self.mapAnnotations];
@@ -41,11 +40,11 @@
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coord, 1000, 1000);
     [self.mapView setRegion:region animated:YES];
     
-    self.listButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.listButton.frame = CGRectMake(265, 7, 50, 32);
-    [self.listButton setTitle:NSLocalizedString(@"List",@"List") forState:UIControlStateNormal];
-    [self.listButton addTarget:self action:@selector(listButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.listButton];
+    self.navigationItem.title = NSLocalizedString(@"Map", @"Map");
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] init];
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"List",@"List");
+    self.navigationItem.rightBarButtonItem.target = self;
+    self.navigationItem.rightBarButtonItem.action = @selector(listButtonTapped:);
 }
 
 - (void)viewDidUnload {
@@ -66,28 +65,37 @@
     pointsOfInterest = POIs;
     NSMutableArray *mapPoints = [NSMutableArray arrayWithCapacity:POIs.count];
     
-    @autoreleasepool {
-        for (POI *poi in POIs) {
-            double latitude = poi.latitude.doubleValue;
-            double longitude = poi.longitude.doubleValue;
-            CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(latitude, longitude);
-            
-            POIMapPoint *point = [[POIMapPoint alloc] init];
-            point.coordinate = coord;
-            point.title = poi.name;
-            
-            NSString *type = poi.type;
-            
-            if (poi.subtype) {
-                type = [type stringByAppendingFormat:@" - %@",poi.subtype];
-            }
-            
-            point.subtitle = type;
-            [mapPoints addObject:point];
-        }
+    for (POI *poi in POIs) {
+        POIMapPoint *point = [[POIMapPoint alloc] initWithPOI:poi];
+        [mapPoints addObject:point];
     }
     
     self.mapAnnotations = [mapPoints copy];
+}
+
+#pragma mark - map view delegate
+
+- (MKAnnotationView*)mapView:(MKMapView *)mv viewForAnnotation:(id<MKAnnotation>)annotation {
+    MKPinAnnotationView *annotationView;
+    
+    annotationView = (MKPinAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"POIAnnotation"];
+    
+    if (!annotationView) {
+        annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"POIAnnotation"];
+    }
+    
+    annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    annotationView.canShowCallout = YES;
+    
+    return annotationView;
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    
+    POIMapPoint *point = view.annotation;
+    POI *pointOfInterest = point.poi;
+    POIDetailViewController *viewController = [[POIDetailViewController alloc] initWithPOI:pointOfInterest];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

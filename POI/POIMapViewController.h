@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
-@interface POIMapViewController : UIViewController
+@interface POIMapViewController : UIViewController <MKMapViewDelegate>
 
 @property (nonatomic,strong) NSArray *pointsOfInterest;
 

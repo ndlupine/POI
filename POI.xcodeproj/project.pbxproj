@@ -16,6 +16,18 @@
 		01842E28152155930001DBE5 /* UIImage+POIType.m in Sources */ = {isa = PBXBuildFile; fileRef = 01842E27152155930001DBE5 /* UIImage+POIType.m */; };
 		01842E2B1522A56F0001DBE5 /* POIMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01842E2A1522A56F0001DBE5 /* POIMapViewController.m */; };
 		01842E2E1522BE590001DBE5 /* POIMapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 01842E2D1522BE580001DBE5 /* POIMapPoint.m */; };
+		01842E3C15231C6D0001DBE5 /* Do.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3015231C6C0001DBE5 /* Do.png */; };
+		01842E3D15231C6D0001DBE5 /* Do@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3115231C6C0001DBE5 /* Do@2x.png */; };
+		01842E3E15231C6D0001DBE5 /* Eat.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3215231C6C0001DBE5 /* Eat.png */; };
+		01842E3F15231C6D0001DBE5 /* Eat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3315231C6C0001DBE5 /* Eat@2x.png */; };
+		01842E4015231C6D0001DBE5 /* Night.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3415231C6C0001DBE5 /* Night.png */; };
+		01842E4115231C6D0001DBE5 /* Night@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3515231C6C0001DBE5 /* Night@2x.png */; };
+		01842E4215231C6D0001DBE5 /* See.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3615231C6C0001DBE5 /* See.png */; };
+		01842E4315231C6D0001DBE5 /* See@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3715231C6C0001DBE5 /* See@2x.png */; };
+		01842E4415231C6D0001DBE5 /* Shop.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3815231C6C0001DBE5 /* Shop.png */; };
+		01842E4515231C6D0001DBE5 /* Shop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3915231C6C0001DBE5 /* Shop@2x.png */; };
+		01842E4615231C6D0001DBE5 /* Sleep.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3A15231C6C0001DBE5 /* Sleep.png */; };
+		01842E4715231C6D0001DBE5 /* Sleep@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01842E3B15231C6D0001DBE5 /* Sleep@2x.png */; };
 		01C6A5E2151D7BC50088E687 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E1151D7BC50088E687 /* UIKit.framework */; };
 		01C6A5E4151D7BC50088E687 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E3151D7BC50088E687 /* Foundation.framework */; };
 		01C6A5E6151D7BC50088E687 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6A5E5151D7BC50088E687 /* CoreGraphics.framework */; };
@@ -58,6 +70,18 @@
 		01842E2A1522A56F0001DBE5 /* POIMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIMapViewController.m; sourceTree = "<group>"; };
 		01842E2C1522BE580001DBE5 /* POIMapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIMapPoint.h; sourceTree = "<group>"; };
 		01842E2D1522BE580001DBE5 /* POIMapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIMapPoint.m; sourceTree = "<group>"; };
+		01842E3015231C6C0001DBE5 /* Do.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Do.png; sourceTree = SOURCE_ROOT; };
+		01842E3115231C6C0001DBE5 /* Do@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Do@2x.png"; sourceTree = SOURCE_ROOT; };
+		01842E3215231C6C0001DBE5 /* Eat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Eat.png; sourceTree = SOURCE_ROOT; };
+		01842E3315231C6C0001DBE5 /* Eat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Eat@2x.png"; sourceTree = SOURCE_ROOT; };
+		01842E3415231C6C0001DBE5 /* Night.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Night.png; sourceTree = SOURCE_ROOT; };
+		01842E3515231C6C0001DBE5 /* Night@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Night@2x.png"; sourceTree = SOURCE_ROOT; };
+		01842E3615231C6C0001DBE5 /* See.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = See.png; sourceTree = SOURCE_ROOT; };
+		01842E3715231C6C0001DBE5 /* See@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "See@2x.png"; sourceTree = SOURCE_ROOT; };
+		01842E3815231C6C0001DBE5 /* Shop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Shop.png; sourceTree = SOURCE_ROOT; };
+		01842E3915231C6C0001DBE5 /* Shop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shop@2x.png"; sourceTree = SOURCE_ROOT; };
+		01842E3A15231C6C0001DBE5 /* Sleep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sleep.png; sourceTree = SOURCE_ROOT; };
+		01842E3B15231C6D0001DBE5 /* Sleep@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Sleep@2x.png"; sourceTree = SOURCE_ROOT; };
 		01C6A5DD151D7BC50088E687 /* POI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = POI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01C6A5E1151D7BC50088E687 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01C6A5E3151D7BC50088E687 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -110,6 +134,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01842E2F15231C510001DBE5 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				01842E3015231C6C0001DBE5 /* Do.png */,
+				01842E3115231C6C0001DBE5 /* Do@2x.png */,
+				01842E3215231C6C0001DBE5 /* Eat.png */,
+				01842E3315231C6C0001DBE5 /* Eat@2x.png */,
+				01842E3415231C6C0001DBE5 /* Night.png */,
+				01842E3515231C6C0001DBE5 /* Night@2x.png */,
+				01842E3615231C6C0001DBE5 /* See.png */,
+				01842E3715231C6C0001DBE5 /* See@2x.png */,
+				01842E3815231C6C0001DBE5 /* Shop.png */,
+				01842E3915231C6C0001DBE5 /* Shop@2x.png */,
+				01842E3A15231C6C0001DBE5 /* Sleep.png */,
+				01842E3B15231C6D0001DBE5 /* Sleep@2x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		01C6A5D2151D7BC50088E687 = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +221,7 @@
 				01C6A5EA151D7BC50088E687 /* InfoPlist.strings */,
 				01C6A5ED151D7BC50088E687 /* main.m */,
 				01C6A5EF151D7BC50088E687 /* POI-Prefix.pch */,
+				01842E2F15231C510001DBE5 /* Images */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -276,6 +320,18 @@
 				01C6A5EC151D7BC50088E687 /* InfoPlist.strings in Resources */,
 				01C6A61D151DA0EB0088E687 /* pois.json in Resources */,
 				01842E16151F45DE0001DBE5 /* View.xib in Resources */,
+				01842E3C15231C6D0001DBE5 /* Do.png in Resources */,
+				01842E3D15231C6D0001DBE5 /* Do@2x.png in Resources */,
+				01842E3E15231C6D0001DBE5 /* Eat.png in Resources */,
+				01842E3F15231C6D0001DBE5 /* Eat@2x.png in Resources */,
+				01842E4015231C6D0001DBE5 /* Night.png in Resources */,
+				01842E4115231C6D0001DBE5 /* Night@2x.png in Resources */,
+				01842E4215231C6D0001DBE5 /* See.png in Resources */,
+				01842E4315231C6D0001DBE5 /* See@2x.png in Resources */,
+				01842E4415231C6D0001DBE5 /* Shop.png in Resources */,
+				01842E4515231C6D0001DBE5 /* Shop@2x.png in Resources */,
+				01842E4615231C6D0001DBE5 /* Sleep.png in Resources */,
+				01842E4715231C6D0001DBE5 /* Sleep@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

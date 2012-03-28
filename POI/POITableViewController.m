@@ -10,15 +10,18 @@
 #import "POI.h"
 #import "POIDetailViewController.h"
 #import "POIMapViewController.h"
+#import "UIImage+POIType.h"
+
 
 @interface POITableViewController ()
 
 - (void)ingestPOIData;
 - (POI*)poiAtIndexPath:(NSIndexPath*)indexPath;
-
 - (void)flipToMap:(id)sender;
 
 @end
+
+
 
 @implementation POITableViewController
 
@@ -27,11 +30,11 @@
 @synthesize searchBar;
 @synthesize searchResultList;
 @synthesize searchCtrl;
-//@synthesize mapViewController;
 
 #pragma mark - Data handling
 
 - (POI*)poiAtIndexPath:(NSIndexPath*)indexPath {
+    // convenience method for finding 
     NSArray *section = [self.sectionList objectAtIndex:indexPath.section];
     return [section objectAtIndex:indexPath.row];
 }
@@ -82,8 +85,11 @@
 - (void)flipToMap:(id)sender {
     POIMapViewController *mapController = [[POIMapViewController alloc] init];
     mapController.pointsOfInterest = self.poiList;
-    mapController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    [self presentModalViewController:mapController animated:YES];
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:mapController];
+    nav.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
+    [self presentModalViewController:nav animated:YES];
 }
 
 #pragma mark - View lifecycle
@@ -115,18 +121,6 @@
     self.searchCtrl.searchResultsDelegate = self;
     
     [self.tableView setContentOffset:CGPointMake(0, 44) animated:NO];
-    
-//    self.mapViewController = [[UIViewController alloc] init];
-//    self.mapViewController.view = [[MKMapView alloc] initWithFrame:self.tableView.frame];
-    
-//    UIView *view = [[UIView alloc] initWithFrame:self.tableView.frame];
-//    UITableView *tv = self.tableView;
-//    [tv removeFromSuperview];
-//    [view addSubview:self.tableView];
-//    self.view = view;
-//    
-    
-//    self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
 }
 
 - (void)viewDidUnload {
@@ -177,7 +171,8 @@
     }
     
     [[cell textLabel] setText:[poi name]];
-    [[cell detailTextLabel] setText:[poi subtype]];
+    [[cell detailTextLabel] setText:[poi fullType]];
+    [[cell imageView] setImage:[UIImage imageForPOIType:[poi type]]];
     
     return cell;
 }
@@ -244,15 +239,6 @@
     self.searchResultList = [results copy];
     
     return YES;
-}
-
-#pragma mark - searchbar delegate
-
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    [self.searchDisplayController setActive:YES animated:YES];
-}
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 }
 
 @end

@@ -44,6 +44,13 @@
     return self;
 }
 
+- (NSString*)fullType {
+    if (!self.subtype) {
+        return self.type;
+    }
+    return [NSString stringWithFormat:@"%@ - %@",self.type,self.subtype];
+}
+
 - (NSString*)description {
     return self.origData.description;
 }

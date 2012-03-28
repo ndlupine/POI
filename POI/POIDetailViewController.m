@@ -49,7 +49,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.title = NSLocalizedString(self.selectedPOI.name, nil);
+    self.navigationItem.title = self.selectedPOI.name;
     
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     
@@ -64,24 +64,20 @@
     self.locationView.layer.borderWidth = self.summaryView.layer.borderWidth;
     self.locationView.clipsToBounds = YES;
     
-    // hide POI map logo
+    // hide the map's logo. google won't notice.
     CALayer *googleLogo = [self.locationView.layer.sublayers lastObject];
     
     if (googleLogo) {
         googleLogo.hidden = YES;
     }
     
-    // set region for map
-    double latitude = self.selectedPOI.latitude.doubleValue;
-    double longitude = self.selectedPOI.longitude.doubleValue;
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coordinate, 200, 200);
-    [self.locationView setRegion:region];
-    
     // set placemarker on map
-    POIMapPoint *point = [[POIMapPoint alloc] init];
-    point.coordinate = coordinate;
+    POIMapPoint *point = [[POIMapPoint alloc] initWithPOI:self.selectedPOI];
     [self.locationView addAnnotation:point];
+    
+    // set region for map
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(point.coordinate, 200, 200);
+    [self.locationView setRegion:region];
     
     // configure webview footer for POI description
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(10, 0, cellWidth, 150)];
@@ -108,12 +104,6 @@
     NSString *content = self.selectedPOI.summary;
     NSString *html = [NSString stringWithFormat:@"%@%@",css,content];
     [self.summaryView loadHTMLString:html baseURL:nil];
-    
-    //price view
-    
-//    NDLRoundedCornerView *cornerView = [[NDLRoundedCornerView alloc] initWithFrame:webView.bounds];
-//    cornerView.backgroundColor = self.view.backgroundColor;
-//    [self.summaryView addSubview:cornerView];
 }
 
 - (void)viewDidUnload {
@@ -132,6 +122,7 @@
 #pragma mark - web view delegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    // after web view loads, resize it to fit content
     [self.summaryView sizeToFit];
     
     UIView *footer = self.tableView.tableFooterView;

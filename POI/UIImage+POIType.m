@@ -11,7 +11,7 @@
 @implementation UIImage (POIType)
 
 + (UIImage*)imageForPOIType:(NSString*)type {
-    return [UIImage imageNamed:@"image"];
+    return [UIImage imageNamed:type];
 }
 
 @end
