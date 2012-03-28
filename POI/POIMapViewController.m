@@ -10,6 +10,7 @@
 #import "POIDetailViewController.h"
 #import "POI.h"
 #import "POIMapPoint.h"
+#import "UIImage+POIType.h"
 
 @interface POIMapViewController ()
 
@@ -29,6 +30,7 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    // configure map view
     self.mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
     self.mapView.delegate = self;
     [self.view addSubview:self.mapView];
@@ -36,10 +38,10 @@
     [self.mapView addAnnotations:self.mapAnnotations];
     
     POIMapPoint *point = [self.mapAnnotations objectAtIndex:0];
-    CLLocationCoordinate2D coord = point.coordinate;
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coord, 1000, 1000);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(point.coordinate, 1000, 1000);
     [self.mapView setRegion:region animated:YES];
     
+    // configure navigation item
     self.navigationItem.title = NSLocalizedString(@"Map", @"Map");
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] init];
     self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"List",@"List");
@@ -53,11 +55,8 @@
     self.mapView = nil;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
 - (void)listButtonTapped:(id)sender {
+    // go back to list view by dismissing this modal view controller
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -77,13 +76,18 @@
 
 - (MKAnnotationView*)mapView:(MKMapView *)mv viewForAnnotation:(id<MKAnnotation>)annotation {
     MKPinAnnotationView *annotationView;
-    
+    // we create annotations a la table view cells
     annotationView = (MKPinAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"POIAnnotation"];
     
     if (!annotationView) {
         annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"POIAnnotation"];
     }
     
+    // set image on the left side of the annotation view
+    POIMapPoint *point = annotation;
+    UIImage *typeImage = [UIImage imageForPOIType:point.poi.type];
+    annotationView.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:typeImage];
+    // disclosure button on the right side
     annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     annotationView.canShowCallout = YES;
     
@@ -91,7 +95,7 @@
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    
+    // when the disclosure button is tapped, push a detail view on the nav stack
     POIMapPoint *point = view.annotation;
     POI *pointOfInterest = point.poi;
     POIDetailViewController *viewController = [[POIDetailViewController alloc] initWithPOI:pointOfInterest];

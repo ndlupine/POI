@@ -22,7 +22,6 @@
 @end
 
 
-
 @implementation POITableViewController
 
 @synthesize poiList;
@@ -34,7 +33,8 @@
 #pragma mark - Data handling
 
 - (POI*)poiAtIndexPath:(NSIndexPath*)indexPath {
-    // convenience method for finding 
+    // convenience method for finding an object
+    // in an array of arrays using an indexPath
     NSArray *section = [self.sectionList objectAtIndex:indexPath.section];
     return [section objectAtIndex:indexPath.row];
 }
@@ -46,6 +46,8 @@
     
     NSMutableArray *sections = [NSMutableArray array];
     
+    // build an array of arrays based on the collated 
+    // section to store the points of interest
     for (POI *poi in poiList) {
         NSUInteger section = [collation sectionForObject:poi 
                                  collationStringSelector:@selector(name)];
@@ -57,6 +59,7 @@
         [[sections objectAtIndex:section] addObject:poi];
     }
     
+    // sort each section
     for (NSUInteger section = 0; section < sections.count; section++) {
         NSArray *thisSection = [sections objectAtIndex:section];
         NSArray *sortedSection = [collation sortedArrayFromArray:thisSection
@@ -79,7 +82,9 @@
         [POIs addObject:[[POI alloc] initWithAttributes:[dictionary valueForKey:@"poi"]]];
     }
     
-    [self setPoiList:POIs];
+    NSSortDescriptor *alphabetical = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    [POIs sortUsingDescriptors:[NSArray arrayWithObject:alphabetical]];
+    [self setPoiList:[POIs copy]];
 }
 
 - (void)flipToMap:(id)sender {
@@ -89,6 +94,7 @@
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:mapController];
     nav.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     
+    // aaaaaaaand... MAP!
     [self presentModalViewController:nav animated:YES];
 }
 
@@ -97,8 +103,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // gobble gobble
     [self ingestPOIData];
     
+    // configure navigation item
     self.navigationItem.title = NSLocalizedString(@"Points of Interest", nil);
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] init];
     self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"POIs", @"POIs");
@@ -107,10 +115,7 @@
     self.navigationItem.rightBarButtonItem.target = self;
     self.navigationItem.rightBarButtonItem.action = @selector(flipToMap:);
     
-    CGSize contentSize = self.tableView.contentSize;
-    contentSize.height += 40;
-    self.tableView.contentSize = contentSize;
-    
+    // configure search bar and search display controller
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width-20, 44)];
     self.searchBar.delegate = self;
     self.tableView.tableHeaderView = searchBar;
@@ -120,6 +125,7 @@
     self.searchCtrl.searchResultsDataSource = self;
     self.searchCtrl.searchResultsDelegate = self;
     
+    // scroll past search bar
     [self.tableView setContentOffset:CGPointMake(0, 44) animated:NO];
 }
 
@@ -137,81 +143,95 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return 1;
+    if (tableView == self.tableView) {
+        return self.sectionList.count;
     }
     
-    return self.sectionList.count;
+    // the search results are grouped under the same section
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return self.searchResultList.count;
-        
+    if (tableView == self.tableView) {
+        return [[self.sectionList objectAtIndex:section] count];
     }
     
-    return [[self.sectionList objectAtIndex:section] count];
+    return self.searchResultList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
     }
     
     POI *poi;
     
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        poi = [self.searchResultList objectAtIndex:indexPath.row];
+    // check the appropriate array for the correct object
+    if (tableView == self.tableView) {
+        poi = [self poiAtIndexPath:indexPath];
     }
     else {
-        poi = [self poiAtIndexPath:indexPath];
+        poi = [self.searchResultList objectAtIndex:indexPath.row];
     }
     
     [[cell textLabel] setText:[poi name]];
-    [[cell detailTextLabel] setText:[poi fullType]];
+    [[cell detailTextLabel] setText:[poi subtype]];
     [[cell imageView] setImage:[UIImage imageForPOIType:[poi type]]];
     
     return cell;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {  
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return nil;
+    // the collator knows all. the collator is Lord.
+    if (tableView == self.tableView) {
+        UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
+        return [[collation sectionTitles] objectAtIndex:section];
     }
     
-    return [[[UILocalizedIndexedCollation currentCollation] sectionTitles] objectAtIndex:section];
+    // no section titles for the search table
+    return nil;
 }
 
 - (NSArray*)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return nil;
+    if (tableView == self.tableView) {
+        // stick a magnifying glass at the top of the indexes
+        NSArray *search = [NSArray arrayWithObject:UITableViewIndexSearch];
+        NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+        return [search arrayByAddingObjectsFromArray:titles];
     }
     
-    NSArray *search = [NSArray arrayWithObject:UITableViewIndexSearch];
-    NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
-    return [search arrayByAddingObjectsFromArray:titles];
+    return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return 0;
+    if (tableView == self.tableView) {
+        // display search bar if touching the magnifying glass
+        if (title == UITableViewIndexSearch) {
+            [self.tableView scrollRectToVisible:self.searchBar.frame animated:YES];
+            return -1;
+        }
+        
+        // because of the magnifying glass, we need to offset index titles by one
+        return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index - 1];
     }
     
-    if (title == UITableViewIndexSearch) {
-        [self.tableView scrollRectToVisible:self.searchBar.frame animated:YES];
-        return -1;
-    }
-    
-    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index - 1];
+    // this doesn't really happen 
+    return 0;
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    POI *poi = [self poiAtIndexPath:indexPath];
+    POI *poi;
+    
+    if (tableView == self.tableView) {
+        poi = [self poiAtIndexPath:indexPath];
+    }
+    else {
+        poi = [self.searchResultList objectAtIndex:indexPath.row];
+    }
     
     POIDetailViewController *detailVC = [[POIDetailViewController alloc] init];
     detailVC.selectedPOI = poi;
@@ -222,7 +242,7 @@
 #pragma mark - Search display controller delegate
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    
+    // alternate method signature -- predicatesAreAWESOME
     NSMutableArray *results = [NSMutableArray arrayWithCapacity:self.poiList.count];
     
     NSPredicate *namePredicate = [NSPredicate predicateWithFormat:@"name contains[cd] %@", searchString];

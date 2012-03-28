@@ -80,11 +80,11 @@
     [self.locationView setRegion:region];
     
     // configure webview footer for POI description
-    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(10, 0, cellWidth, 150)];
+    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(10, 0, cellWidth, 100)];
     self.tableView.tableFooterView = footer;
     
     // configure webview
-    self.summaryView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 10, cellWidth, 150)];
+    self.summaryView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 10, cellWidth, 100)];
     self.summaryView.backgroundColor = [UIColor lightGrayColor];
     self.summaryView.layer.cornerRadius = 10.0;
     self.summaryView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
@@ -101,7 +101,13 @@
         font-family:Helvetica;\
         line-height:150%;\
     }</style>";
+    
     NSString *content = self.selectedPOI.summary;
+    
+    if (!content) {
+        content = NSLocalizedString(@"We're looking into it.", nil);
+    }
+    
     NSString *html = [NSString stringWithFormat:@"%@%@",css,content];
     [self.summaryView loadHTMLString:html baseURL:nil];
 }
@@ -139,7 +145,9 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // store a list of the properties actually available for this POI
     NSMutableArray *items = [NSMutableArray array];
+    
     if (self.selectedPOI.latitude && self.selectedPOI.longitude) {
         [items addObject:@"map"];
     }
@@ -149,7 +157,7 @@
     if (self.selectedPOI.phoneNumber) {
         [items addObject:NSLocalizedString(@"Phone",@"Phone")];
     }
-    if (self.selectedPOI.type || self.selectedPOI.subtype) {// || self.selectedPOI.price) {
+    if (self.selectedPOI.type || self.selectedPOI.subtype) {
         [items addObject:NSLocalizedString(@"Type", @"Type")];
     }
     if (self.selectedPOI.hours) {
@@ -181,6 +189,7 @@
     
     if ([currentItem isEqualToString:NSLocalizedString(@"Address", @"Address")]) {
         cell.detailTextLabel.text = self.selectedPOI.address;
+        cell.detailTextLabel.numberOfLines = 2;
     }
     
     if ([currentItem isEqualToString:NSLocalizedString(@"Phone", @"Phone")]) {
@@ -188,13 +197,7 @@
     }
     
     if ([currentItem isEqualToString:NSLocalizedString(@"Type", @"Type")]) {
-        NSString *cellText = self.selectedPOI.type;
-        
-        if (self.selectedPOI.subtype) {
-            cellText = [NSString stringWithFormat:@"%@ - %@",cellText,self.selectedPOI.subtype];
-        }
-        
-        cell.detailTextLabel.text = cellText;
+        cell.detailTextLabel.text = self.selectedPOI.fullType;
     }
     
     if ([currentItem isEqualToString:NSLocalizedString(@"Hours", @"Hours")]) {
@@ -208,6 +211,7 @@
 #pragma mark - tableview delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // return the map cell's height as taller if it's been tapped
     NSString *selectedItem = [self.availableItems objectAtIndex:indexPath.section];
     
     if ([selectedItem isEqualToString:@"map"]) {
@@ -220,6 +224,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *selectedItem = [self.availableItems objectAtIndex:indexPath.section];
     
+    // expand the map view when selected
     if ([selectedItem isEqualToString:@"map"]) {
         [self.tableView beginUpdates];
         self.mapExpanded = !self.mapExpanded;
@@ -230,7 +235,9 @@
         UIDevice *device = [UIDevice currentDevice];
         UIAlertView *alert;
         
+        // make sure this is, you know... a phone
         if ([device.model isEqualToString:@"iPhone"]) {
+            // show the number and offer to call/cancel
             alert = [[UIAlertView alloc] initWithTitle:self.selectedPOI.phoneNumber
                                                message:@""
                                               delegate:self
@@ -257,11 +264,12 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSIndexPath *selectedCell = [self.tableView indexPathForSelectedRow];
     [self.tableView deselectRowAtIndexPath:selectedCell animated:YES];
-
+    
     if (buttonIndex == 0) {
         return;
     }
     
+    // if they clicked the "call" button after tapping the phone number, place the call
     NSString *urlString = [NSString stringWithFormat:@"tel://%@",self.selectedPOI.phoneNumber];
     urlString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"-"];
     NSURL *dialURL = [NSURL URLWithString:urlString];

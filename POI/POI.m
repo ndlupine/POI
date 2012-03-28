@@ -38,6 +38,9 @@
         self.URLs = [attributes valueForKey:@"urls"];
         self.hours = [attributes valueForKey:@"hours"];
         self.price = [attributes valueForKey:@"price_range"];
+        
+        // for debugging, mostly.
+        // mostly.
         self.origData = attributes;
     }
     
@@ -45,6 +48,7 @@
 }
 
 - (NSString*)fullType {
+    // a quick-use way to represent the type and subtype as a single string
     if (!self.subtype) {
         return self.type;
     }

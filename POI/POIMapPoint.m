@@ -33,14 +33,7 @@
     
     self.coordinate = coord;
     self.title = point.name;
-    
-    NSString *type = point.type;
-    
-    if (point.subtype) {
-        type = [type stringByAppendingFormat:@" - %@",point.subtype];
-    }
-    
-    self.subtitle = type;
+    self.subtitle = point.subtype;
     
     poi = point;
 }

@@ -5,14 +5,11 @@
 //  Created by Nick Lupinetti on 3/24/12.
 //  Copyright (c) 2012 Nick Lupinetti. All rights reserved.
 //
+//  Taking a dictionary obtained from decoding data into 
+//  Foundation objects, represents a point of interest in
+//  the Lonely Planet database.
 
 #import <Foundation/Foundation.h>
-
-typedef enum {
-    POIPriceLevelOne,
-    POIPriceLevelTwo,
-    POIPriceLEvelThree
-}POIPriceLevel;
 
 @interface POI : NSObject
 
