@@ -9,11 +9,14 @@
 #import "POITableViewController.h"
 #import "POI.h"
 #import "POIDetailViewController.h"
+#import "POIMapViewController.h"
 
 @interface POITableViewController ()
 
 - (void)ingestPOIData;
 - (POI*)poiAtIndexPath:(NSIndexPath*)indexPath;
+
+- (void)flipToMap:(id)sender;
 
 @end
 
@@ -24,6 +27,7 @@
 @synthesize searchBar;
 @synthesize searchResultList;
 @synthesize searchCtrl;
+//@synthesize mapViewController;
 
 #pragma mark - Data handling
 
@@ -75,6 +79,13 @@
     [self setPoiList:POIs];
 }
 
+- (void)flipToMap:(id)sender {
+    POIMapViewController *mapController = [[POIMapViewController alloc] init];
+    mapController.pointsOfInterest = self.poiList;
+    mapController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentModalViewController:mapController animated:YES];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
@@ -84,7 +95,11 @@
     
     self.navigationItem.title = NSLocalizedString(@"Points of Interest", nil);
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] init];
-    self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"POIs", nil);
+    self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"POIs", @"POIs");
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] init];
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Map", @"Map");
+    self.navigationItem.rightBarButtonItem.target = self;
+    self.navigationItem.rightBarButtonItem.action = @selector(flipToMap:);
     
     CGSize contentSize = self.tableView.contentSize;
     contentSize.height += 40;
@@ -100,6 +115,18 @@
     self.searchCtrl.searchResultsDelegate = self;
     
     [self.tableView setContentOffset:CGPointMake(0, 44) animated:NO];
+    
+//    self.mapViewController = [[UIViewController alloc] init];
+//    self.mapViewController.view = [[MKMapView alloc] initWithFrame:self.tableView.frame];
+    
+//    UIView *view = [[UIView alloc] initWithFrame:self.tableView.frame];
+//    UITableView *tv = self.tableView;
+//    [tv removeFromSuperview];
+//    [view addSubview:self.tableView];
+//    self.view = view;
+//    
+    
+//    self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
 }
 
 - (void)viewDidUnload {

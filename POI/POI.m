@@ -36,6 +36,7 @@
         self.address = [attributes valueForKeyPath:@"address.street"];
         self.phoneNumber = [[attributes valueForKeyPath:@"telephones.click_to_dial"] lastObject];
         self.URLs = [attributes valueForKey:@"urls"];
+        self.hours = [attributes valueForKey:@"hours"];
         self.price = [attributes valueForKey:@"price_range"];
         self.origData = attributes;
     }

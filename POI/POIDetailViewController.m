@@ -11,22 +11,7 @@
 #import "UIImage+POIType.h"
 #import <QuartzCore/QuartzCore.h>
 #import <MapKit/MapKit.h>
-#import <CoreLocation/CoreLocation.h>
-//#import "NDLRoundedCornerView.h"
-
-@interface MapPoint : NSObject <MKAnnotation>
-
-@property (nonatomic) CLLocationCoordinate2D coordinate;
-@property (nonatomic,copy) NSString *title;
-@property (nonatomic,copy) NSString *subtitle;
-
-@end
-
-@implementation MapPoint
-
-@synthesize coordinate,title,subtitle;
-
-@end
+#import "POIMapPoint.h"
 
 @interface POIDetailViewController ()
 
@@ -94,13 +79,12 @@
     [self.locationView setRegion:region];
     
     // set placemarker on map
-    MapPoint *point = [[MapPoint alloc] init];
+    POIMapPoint *point = [[POIMapPoint alloc] init];
     point.coordinate = coordinate;
     [self.locationView addAnnotation:point];
     
     // configure webview footer for POI description
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(10, 0, cellWidth, 150)];
-    [footer addSubview:self.summaryView];
     self.tableView.tableFooterView = footer;
     
     // configure webview
@@ -111,6 +95,7 @@
     self.summaryView.layer.borderWidth = 1.0;
     self.summaryView.clipsToBounds = YES;
     self.summaryView.delegate = self;
+    [footer addSubview:self.summaryView];
     
     // insert webview content -- we'll resize based on content 
     // after webview has loaded it (using webview delegate method)
@@ -168,16 +153,16 @@
         [items addObject:@"map"];
     }
     if (self.selectedPOI.address) {
-        [items addObject:@"address"];
-    }
-    if (self.selectedPOI.subtype || self.selectedPOI.subtype) {// || self.selectedPOI.price) {
-        [items addObject:@"type"];
+        [items addObject:NSLocalizedString(@"Address", @"Address")];
     }
     if (self.selectedPOI.phoneNumber) {
-        [items addObject:@"phone"];
+        [items addObject:NSLocalizedString(@"Phone",@"Phone")];
+    }
+    if (self.selectedPOI.type || self.selectedPOI.subtype) {// || self.selectedPOI.price) {
+        [items addObject:NSLocalizedString(@"Type", @"Type")];
     }
     if (self.selectedPOI.hours) {
-        [items addObject:@"hours"];
+        [items addObject:NSLocalizedString(@"Hours", @"Hours")];
     }
     
     self.availableItems = [items copy];
@@ -189,41 +174,41 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-        cell.textLabel.textAlignment = UITextAlignmentCenter;
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"cell"];
+//        cell.textLabel.textAlignment = UITextAlignmentCenter;
     }
     
     //which cell are we currently creating?
     NSString *currentItem = [self.availableItems objectAtIndex:indexPath.section];
+    cell.textLabel.text = currentItem;
     
     if ([currentItem isEqualToString:@"map"]) {
         cell.backgroundView = self.locationView;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textLabel.text = nil;
     }
     
-    if ([currentItem isEqualToString:@"address"]) {
-        cell.textLabel.text = self.selectedPOI.address;
+    if ([currentItem isEqualToString:NSLocalizedString(@"Address", @"Address")]) {
+        cell.detailTextLabel.text = self.selectedPOI.address;
     }
     
-    if ([currentItem isEqualToString:@"type"]) {
+    if ([currentItem isEqualToString:NSLocalizedString(@"Phone", @"Phone")]) {
+        cell.detailTextLabel.text = self.selectedPOI.phoneNumber;
+    }
+    
+    if ([currentItem isEqualToString:NSLocalizedString(@"Type", @"Type")]) {
         NSString *cellText = self.selectedPOI.type;
         
         if (self.selectedPOI.subtype) {
             cellText = [NSString stringWithFormat:@"%@ - %@",cellText,self.selectedPOI.subtype];
         }
-//        if (self.selectedPOI.price) {
-//            cellText = [NSString stringWithFormat:@"%@ price", cellText];
-//        }
         
-        cell.textLabel.text = cellText;
+        cell.detailTextLabel.text = cellText;
     }
     
-    if ([currentItem isEqualToString:@"phone"]) {
-        cell.textLabel.text = self.selectedPOI.phoneNumber;
-    }
-    
-    if ([currentItem isEqualToString:@"hours"]) {
-        cell.textLabel.text = self.selectedPOI.hours;
+    if ([currentItem isEqualToString:NSLocalizedString(@"Hours", @"Hours")]) {
+        cell.detailTextLabel.text = self.selectedPOI.hours;
+        cell.detailTextLabel.numberOfLines = 2;
     }
     
     return cell;
@@ -250,7 +235,7 @@
         [self.tableView endUpdates];
     }
     
-    if ([selectedItem isEqualToString:@"phone"]) {
+    if ([selectedItem isEqualToString:NSLocalizedString(@"Phone", @"Phone")]) {
         UIDevice *device = [UIDevice currentDevice];
         UIAlertView *alert;
         
@@ -259,7 +244,7 @@
                                                message:@""
                                               delegate:self
                                      cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
-                                     otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
+                                     otherButtonTitles:NSLocalizedString(@"Call", nil), nil];
         } else {
             alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not Permitted",nil)
                                                message:NSLocalizedString(@"Your device cannot dial this phone number.",nil)
