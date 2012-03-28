@@ -33,11 +33,7 @@
 @property (nonatomic,strong) UIWebView *summaryView;
 @property (nonatomic,strong) MKMapView *locationView;
 @property (nonatomic,strong) NSArray *availableItems;
-//@property (nonatomic,strong) UILabel *addressLabel;
-//@property (nonatomic,strong) UILabel *subtypeLabel;
-//@property (nonatomic,strong) UIImageView *typeView;
-//@property (nonatomic,strong) POIPriceRangeView *priceView;
-
+@property (nonatomic) BOOL mapExpanded;
 
 @end
 
@@ -47,13 +43,20 @@
 @synthesize summaryView;
 @synthesize locationView;
 @synthesize availableItems;
-//@synthesize addressLabel;
-//@synthesize subtypeLabel;
-//@synthesize priceView;
-//@synthesize typeView;
+@synthesize mapExpanded;
 
 - (id)init {
     return [self initWithStyle:UITableViewStyleGrouped];
+}
+
+- (id)initWithPOI:(POI *)poi {
+    self = [self init];
+    
+    if (self) {
+        self.selectedPOI = poi;
+    }
+    
+    return self;
 }
 
 #pragma mark - View lifecycle
@@ -67,60 +70,50 @@
     
     CGFloat cellWidth = self.tableView.frame.size.width - 20;
     
-    self.summaryView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 10, cellWidth, 150)];
-    self.summaryView.backgroundColor = [UIColor lightGrayColor];
-    self.summaryView.layer.cornerRadius = 10.0;
-    self.summaryView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-    self.summaryView.layer.borderWidth = 1.0;
-    self.summaryView.clipsToBounds = YES;
-    
-    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(10, 0, cellWidth, 150)];
-    [footer addSubview:self.summaryView];
-    self.tableView.tableFooterView = footer;
-//    [self.view addSubview:self.summaryView];
-    
+    // configure POI map
     self.locationView = [[MKMapView alloc] initWithFrame:CGRectMake(10, 10, cellWidth, 100)];
-    self.locationView.userInteractionEnabled = NO;
+    self.locationView.zoomEnabled = NO;
+    self.locationView.scrollEnabled = NO;
     self.locationView.layer.cornerRadius = 10.0;
     self.locationView.layer.borderColor = self.summaryView.layer.borderColor;
     self.locationView.layer.borderWidth = self.summaryView.layer.borderWidth;
     self.locationView.clipsToBounds = YES;
     
+    // hide POI map logo
     CALayer *googleLogo = [self.locationView.layer.sublayers lastObject];
     
     if (googleLogo) {
         googleLogo.hidden = YES;
     }
     
-    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cellWidth, 120)];
-    [header addSubview:self.locationView];
-    self.tableView.tableHeaderView = header;
+    // set region for map
+    double latitude = self.selectedPOI.latitude.doubleValue;
+    double longitude = self.selectedPOI.longitude.doubleValue;
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coordinate, 200, 200);
+    [self.locationView setRegion:region];
     
-//    UILabel *addressView = [[UILabel alloc] initWithFrame:CGRectMake(100, 15, 205, 20)];
-//    self.addressLabel = addressView;
-//    self.addressLabel.backgroundColor = [UIColor clearColor];
-//    [self.view addSubview:self.addressLabel];
-//    
-//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 45, 30, 30)];
-//    self.typeView = imageView;
-//    
-//    UILabel *subtypeView = [[UILabel alloc] initWithFrame:CGRectMake(130, 45, 175, 20)];
-//    self.subtypeLabel = subtypeView;
-//    self.subtypeLabel.backgroundColor = [UIColor clearColor];
-//    [self.view addSubview:self.subtypeLabel];
+    // set placemarker on map
+    MapPoint *point = [[MapPoint alloc] init];
+    point.coordinate = coordinate;
+    [self.locationView addAnnotation:point];
     
-    //price view
+    // configure webview footer for POI description
+    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(10, 0, cellWidth, 150)];
+    [footer addSubview:self.summaryView];
+    self.tableView.tableFooterView = footer;
     
-//    NDLRoundedCornerView *cornerView = [[NDLRoundedCornerView alloc] initWithFrame:webView.bounds];
-//    cornerView.backgroundColor = self.view.backgroundColor;
-//    [self.summaryView addSubview:cornerView];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-        
-    NSLog(@"%@",self.selectedPOI);
+    // configure webview
+    self.summaryView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 10, cellWidth, 150)];
+    self.summaryView.backgroundColor = [UIColor lightGrayColor];
+    self.summaryView.layer.cornerRadius = 10.0;
+    self.summaryView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    self.summaryView.layer.borderWidth = 1.0;
+    self.summaryView.clipsToBounds = YES;
+    self.summaryView.delegate = self;
     
+    // insert webview content -- we'll resize based on content 
+    // after webview has loaded it (using webview delegate method)
     NSString *css = @"<style type=\"text/css\">\
     body {\
         background-color:#F8F8F8;\
@@ -131,25 +124,29 @@
     NSString *html = [NSString stringWithFormat:@"%@%@",css,content];
     [self.summaryView loadHTMLString:html baseURL:nil];
     
-    double latitude = self.selectedPOI.latitude.doubleValue;
-    double longitude = self.selectedPOI.longitude.doubleValue;
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coordinate, 200, 200);
-    [self.locationView setRegion:region];
+    //price view
     
-    MapPoint *point = [[MapPoint alloc] init];
-    point.coordinate = coordinate;
-    [self.locationView addAnnotation:point];
-    
-//    self.addressLabel.text = self.selectedPOI.address;
-//    self.subtypeLabel.text = self.selectedPOI.subtype;
-//    self.typeView.image = [UIImage imageForPOIType:self.selectedPOI.type];
-//    self.priceView.dollarSigns = self.selectedPOI.price.unsignedIntegerValue;
+//    NDLRoundedCornerView *cornerView = [[NDLRoundedCornerView alloc] initWithFrame:webView.bounds];
+//    cornerView.backgroundColor = self.view.backgroundColor;
+//    [self.summaryView addSubview:cornerView];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewDidUnload {
+    [super viewDidUnload];
     
+    self.summaryView = nil;
+    self.locationView = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+        
+    NSLog(@"%@",self.selectedPOI);
+}
+
+#pragma mark - web view delegate
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
     [self.summaryView sizeToFit];
     
     UIView *footer = self.tableView.tableFooterView;
@@ -157,17 +154,6 @@
     footerFrame.size.height = self.summaryView.bounds.size.height + 20;
     footer.frame = footerFrame;
     self.tableView.tableFooterView = footer;
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    
-    summaryView = nil;
-    locationView = nil;
-//    addressLabel = nil;
-//    subtypeLabel = nil;
-//    typeView = nil;
-//    priceView = nil;
 }
 
 #pragma mark - table data source
@@ -178,7 +164,9 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSMutableArray *items = [NSMutableArray array];
-    
+    if (self.selectedPOI.latitude && self.selectedPOI.longitude) {
+        [items addObject:@"map"];
+    }
     if (self.selectedPOI.address) {
         [items addObject:@"address"];
     }
@@ -207,6 +195,11 @@
     
     //which cell are we currently creating?
     NSString *currentItem = [self.availableItems objectAtIndex:indexPath.section];
+    
+    if ([currentItem isEqualToString:@"map"]) {
+        cell.backgroundView = self.locationView;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
     
     if ([currentItem isEqualToString:@"address"]) {
         cell.textLabel.text = self.selectedPOI.address;
@@ -238,12 +231,66 @@
 
 #pragma mark - tableview delegate
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *selectedItem = [self.availableItems objectAtIndex:indexPath.section];
+    
+    if ([selectedItem isEqualToString:@"map"]) {
+        return self.mapExpanded ? 370 : 100;
+    }
+    
+    return 44;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *selectedItem = [self.availableItems objectAtIndex:indexPath.section];
     
+    if ([selectedItem isEqualToString:@"map"]) {
+        [self.tableView beginUpdates];
+        self.mapExpanded = !self.mapExpanded;
+        [self.tableView endUpdates];
+    }
+    
     if ([selectedItem isEqualToString:@"phone"]) {
-        <#statements#>
+        UIDevice *device = [UIDevice currentDevice];
+        UIAlertView *alert;
+        
+        if ([device.model isEqualToString:@"iPhone"]) {
+            alert = [[UIAlertView alloc] initWithTitle:self.selectedPOI.phoneNumber
+                                               message:@""
+                                              delegate:self
+                                     cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
+                                     otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
+        } else {
+            alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not Permitted",nil)
+                                               message:NSLocalizedString(@"Your device cannot dial this phone number.",nil)
+                                              delegate:nil
+                                     cancelButtonTitle:NSLocalizedString(@"OK",nil)
+                                     otherButtonTitles:nil];
+        }
+        
+        [alert show];
+    }
+    
+    else {
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
+
+#pragma mark - alertview delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSIndexPath *selectedCell = [self.tableView indexPathForSelectedRow];
+    [self.tableView deselectRowAtIndexPath:selectedCell animated:YES];
+
+    if (buttonIndex == 0) {
+        return;
+    }
+    
+    NSString *urlString = [NSString stringWithFormat:@"tel://%@",self.selectedPOI.phoneNumber];
+    urlString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"-"];
+    NSURL *dialURL = [NSURL URLWithString:urlString];
+    [[UIApplication sharedApplication] openURL:dialURL];
+}
+    
 
 @end

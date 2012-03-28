@@ -19,7 +19,11 @@
 
 @implementation POITableViewController
 
-@synthesize poiList,sectionList;
+@synthesize poiList;
+@synthesize sectionList;
+@synthesize searchBar;
+@synthesize searchResultList;
+@synthesize searchCtrl;
 
 #pragma mark - Data handling
 
@@ -82,13 +86,27 @@
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] init];
     self.navigationItem.backBarButtonItem.title = NSLocalizedString(@"POIs", nil);
     
-    self.view.frame = CGRectMake(20,40,280,350);
+    CGSize contentSize = self.tableView.contentSize;
+    contentSize.height += 40;
+    self.tableView.contentSize = contentSize;
+    
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width-20, 44)];
+    self.searchBar.delegate = self;
+    self.tableView.tableHeaderView = searchBar;
+    
+    self.searchCtrl = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+    self.searchCtrl.delegate = self;
+    self.searchCtrl.searchResultsDataSource = self;
+    self.searchCtrl.searchResultsDelegate = self;
+    
+    [self.tableView setContentOffset:CGPointMake(0, 44) animated:NO];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    
+    self.searchBar = nil;
+    self.searchCtrl = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -98,12 +116,19 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return 1;
+    }
+    
     return self.sectionList.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return self.searchResultList.count;
+        
+    }
+    
     return [[self.sectionList objectAtIndex:section] count];
 }
 
@@ -115,49 +140,51 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    POI *poi = [self poiAtIndexPath:indexPath];
+    POI *poi;
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        poi = [self.searchResultList objectAtIndex:indexPath.row];
+    }
+    else {
+        poi = [self poiAtIndexPath:indexPath];
+    }
     
     [[cell textLabel] setText:[poi name]];
     [[cell detailTextLabel] setText:[poi subtype]];
-//    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     
     return cell;
 }
 
-- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {  
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return nil;
+    }
+    
     return [[[UILocalizedIndexedCollation currentCollation] sectionTitles] objectAtIndex:section];
 }
 
 - (NSArray*)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return nil;
+    }
+    
+    NSArray *search = [NSArray arrayWithObject:UITableViewIndexSearch];
+    NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+    return [search arrayByAddingObjectsFromArray:titles];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return 0;
+    }
+    
+    if (title == UITableViewIndexSearch) {
+        [self.tableView scrollRectToVisible:self.searchBar.frame animated:YES];
+        return -1;
+    }
+    
+    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index - 1];
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -168,6 +195,37 @@
     detailVC.selectedPOI = poi;
     
     [self.navigationController pushViewController:detailVC animated:YES];
+}
+
+#pragma mark - Search display controller delegate
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    
+    NSMutableArray *results = [NSMutableArray arrayWithCapacity:self.poiList.count];
+    
+    NSPredicate *namePredicate = [NSPredicate predicateWithFormat:@"name contains[cd] %@", searchString];
+    NSPredicate *typePredicate = [NSPredicate predicateWithFormat:@"subtype contains[cd] %@",searchString];
+    NSArray *predicateArray = [NSArray arrayWithObjects:namePredicate,typePredicate, nil];
+    NSPredicate *searchPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
+    
+    for (POI* poi in self.poiList) {
+        if ([searchPredicate evaluateWithObject:poi]) {
+            [results addObject:poi];
+        }
+    }
+    
+    self.searchResultList = [results copy];
+    
+    return YES;
+}
+
+#pragma mark - searchbar delegate
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [self.searchDisplayController setActive:YES animated:YES];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 }
 
 @end

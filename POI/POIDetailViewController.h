@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "POI.h"
 
-@interface POIDetailViewController : UITableViewController
+@interface POIDetailViewController : UITableViewController <UIAlertViewDelegate,UIWebViewDelegate>
 
 @property (nonatomic,strong) POI *selectedPOI;
+
+- (id)initWithPOI:(POI*)poi;
 
 @end
