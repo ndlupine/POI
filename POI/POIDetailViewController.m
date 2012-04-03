@@ -18,7 +18,10 @@
 @property (nonatomic,strong) UIWebView *summaryView;
 @property (nonatomic,strong) MKMapView *locationView;
 @property (nonatomic,strong) NSArray *availableItems;
+@property (nonatomic,strong) NSString *htmlContent;
 @property (nonatomic) BOOL mapExpanded;
+
+- (void)resizeFooterWithReload:(BOOL)reload;
 
 @end
 
@@ -28,6 +31,7 @@
 @synthesize summaryView;
 @synthesize locationView;
 @synthesize availableItems;
+@synthesize htmlContent;
 @synthesize mapExpanded;
 
 - (id)init {
@@ -99,6 +103,7 @@
     body {\
         background-color:#F8F8F8;\
         font-family:Helvetica;\
+        font-size:medium;\
         line-height:150%;\
     }</style>";
     
@@ -108,8 +113,8 @@
         content = NSLocalizedString(@"We're looking into it.", nil);
     }
     
-    NSString *html = [NSString stringWithFormat:@"%@%@",css,content];
-    [self.summaryView loadHTMLString:html baseURL:nil];
+    self.htmlContent = [NSString stringWithFormat:@"%@%@",css,content];
+    [self.summaryView loadHTMLString:self.htmlContent baseURL:nil];
 }
 
 - (void)viewDidUnload {
@@ -122,20 +127,48 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
         
-    NSLog(@"%@",self.selectedPOI);
+//    NSLog(@"%@",self.selectedPOI);
+    [self resizeFooterWithReload:YES];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
+    return !(orientation == UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    [self resizeFooterWithReload:YES];
+}
+
+- (void)resizeFooterWithReload:(BOOL)reload {
+    // resize the webview to show everything it contains
+    // and size the containing footer view in relation
+    
+    UIView *footer = self.tableView.tableFooterView;
+    
+    CGRect webFrame = self.summaryView.frame;
+    webFrame.size = CGSizeMake(footer.frame.size.width-20, 50);
+    self.summaryView.frame = webFrame;
+    
+    if (reload) {
+        [self.summaryView loadHTMLString:self.htmlContent baseURL:nil];
+        return;
+    }
+    
+    [self.summaryView sizeToFit];
+    
+    CGRect footerFrame = footer.frame;
+    footerFrame.size.height = self.summaryView.bounds.size.height + 20;
+    footer.frame = footerFrame;
+    self.tableView.tableFooterView = footer;
 }
 
 #pragma mark - web view delegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     // after web view loads, resize it to fit content
-    [self.summaryView sizeToFit];
-    
-    UIView *footer = self.tableView.tableFooterView;
-    CGRect footerFrame = footer.frame;
-    footerFrame.size.height = self.summaryView.bounds.size.height + 20;
-    footer.frame = footerFrame;
-    self.tableView.tableFooterView = footer;
+//    NSLog(@"%@",NSStringFromSelector(_cmd));
+    [self resizeFooterWithReload:NO];
 }
 
 #pragma mark - table data source

@@ -136,8 +136,8 @@
     self.searchCtrl = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
+    return !(orientation == UIInterfaceOrientationPortraitUpsideDown);
 }
 
 #pragma mark - Table view data source

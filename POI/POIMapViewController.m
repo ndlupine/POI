@@ -27,13 +27,17 @@
 @synthesize mapAnnotations;
 @synthesize mapView;
 
+#pragma mark - view lifecycle
+
 - (void)viewDidLoad{
     [super viewDidLoad];
     
     // configure map view
+//    NSLog(@"%@",NSStringFromCGRect(self.view.bounds));
     self.mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
     self.mapView.delegate = self;
-    [self.view addSubview:self.mapView];
+    [self.view.superview addSubview:self.mapView];
+    self.view = self.mapView;
     
     [self.mapView addAnnotations:self.mapAnnotations];
     
@@ -54,6 +58,22 @@
     
     self.mapView = nil;
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+//    NSLog(@"%@",NSStringFromCGRect(self.view.bounds));
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
+    return !(orientation == UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//    self.mapView.frame = self.view.bounds;
+}
+
+#pragma mark - view ingress/egress
 
 - (void)listButtonTapped:(id)sender {
     // go back to list view by dismissing this modal view controller
